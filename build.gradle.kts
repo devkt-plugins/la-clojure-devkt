@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.io.*
 
 val kotlinVersion = "1.2.31"
@@ -6,10 +5,7 @@ val kotlinVersion = "1.2.31"
 group = "org.jetbrains.plugin.devkt.clojure"
 version = "v1.0-SNAPSHOT"
 
-plugins {
-  java
-  kotlin("jvm") version "1.2.31"
-}
+plugins { java }
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
@@ -19,17 +15,11 @@ java {
 java.sourceSets {
   "main" {
     java.setSrcDirs(listOf("src"))
-    withConvention(KotlinSourceSet::class) {
-      kotlin.setSrcDirs(listOf("src"))
-    }
     resources.setSrcDirs(listOf("res"))
   }
 
   "test" {
     java.setSrcDirs(emptyList<Any>())
-    withConvention(KotlinSourceSet::class) {
-      kotlin.setSrcDirs(emptyList<Any>())
-    }
     resources.setSrcDirs(emptyList<Any>())
   }
 }

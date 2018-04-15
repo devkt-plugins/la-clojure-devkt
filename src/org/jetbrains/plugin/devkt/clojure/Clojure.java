@@ -8,8 +8,13 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet;
+import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes;
 import org.jetbrains.plugin.devkt.clojure.parser.ClojureParserDefinition;
+import org.jetbrains.plugin.devkt.clojure.psi.api.ClKeyword;
+import org.jetbrains.plugin.devkt.clojure.psi.api.ClList;
+import org.jetbrains.plugin.devkt.clojure.psi.api.ClVector;
+import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
 
 /**
  * DevKt implementation for la-clojure
@@ -30,7 +35,7 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	@Override
 	public @NotNull
 	String getLineCommentStart() {
-		return "; ";
+		return ";";
 	}
 
 	@Override
@@ -40,6 +45,29 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 
 	@Override
 	public void annotate(PsiElement psiElement, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
+		if (psiElement instanceof ClSymbol) symbol((ClSymbol) psiElement, annotationHolder, colorScheme);
+		else if (psiElement instanceof ClKeyword) keyword(((ClKeyword) psiElement), annotationHolder, colorScheme);
+	}
+
+	private void keyword(ClKeyword psiElement, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
+		annotationHolder.highlight(psiElement, colorScheme.getMetaData());
+	}
+
+	private void symbol(ClSymbol symbol, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
+		if ("let".equals(symbol.getText())) {
+			annotationHolder.highlight(symbol, colorScheme.getKeywords());
+		} else if (symbol.getParent() instanceof ClVector) {
+			ClList parent = PsiTreeUtil.getParentOfType(symbol, ClList.class);
+			if (null == parent) return;
+			ClSymbol functionName = parent.getFirstSymbol();
+			if (null == functionName) return;
+			PsiElement nextVisibleLeaf = PsiTreeUtil.nextVisibleLeaf(functionName);
+			if (null == nextVisibleLeaf) return;
+			if ("let".equals(functionName.getText()) && nextVisibleLeaf instanceof ClVector && PsiTreeUtil.isAncestor(
+					nextVisibleLeaf,
+					symbol,
+					true)) annotationHolder.highlight(symbol, colorScheme.getVariable());
+		}
 	}
 
 	@Override
