@@ -33,6 +33,15 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			RATIO);
 
 	private static final TokenSet OPERATORS = TokenSet.create(SHARP, UP, SHARPUP, TILDA, AT, TILDAAT, QUOTE, BACKQUOTE);
+	private static final List<Object> cljsPredefined = Arrays.asList("Infinity", "-Infinity");
+	private static final List<Object> cljsTypes = Arrays.asList("default",
+			"nil",
+			"object",
+			"boolean",
+			"number",
+			"string",
+			"array",
+			"function");
 	private static final List<Object> typeMetaAliases = Arrays.asList("int",
 			"ints",
 			"long",
@@ -74,7 +83,20 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			"reify*",
 			"deftype*",
 			"in-ns",
-			"load-file");
+			"load-file",
+			"let",
+			"loop",
+			"when-let",
+			"when-some",
+			"if-let",
+			"if-some",
+			"with-open",
+			"when-first",
+			"with-redefs",
+			"for",
+			"doseq",
+			"dotimes",
+			"with-local-vars");
 
 	public Clojure() {
 		super(ClojureLanguage.getInstance(), new ClojureParserDefinition());
@@ -103,10 +125,13 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	}
 
 	private void symbol(ClSymbol symbol, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
-		if (reserved.contains(symbol.getText())) {
+		String symbolText = symbol.getText();
+		if (reserved.contains(symbolText)) {
 			annotationHolder.highlight(symbol, colorScheme.getKeywords());
-		} else if (typeMetaAliases.contains(symbol.getText())) {
+		} else if (typeMetaAliases.contains(symbolText) || cljsTypes.contains(symbolText)) {
 			annotationHolder.highlight(symbol, colorScheme.getUserTypeRef());
+		} else if (cljsPredefined.contains(symbolText)) {
+			annotationHolder.highlight(symbol, colorScheme.getPredefined());
 		} else if (symbol.getParent() instanceof ClVector) {
 			ClList parent = PsiTreeUtil.getParentOfType(symbol, ClList.class);
 			if (null == parent) return;
