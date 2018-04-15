@@ -61,12 +61,10 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			if (null == parent) return;
 			ClSymbol functionName = parent.getFirstSymbol();
 			if (null == functionName) return;
-			PsiElement nextVisibleLeaf = PsiTreeUtil.nextVisibleLeaf(functionName);
+			PsiElement nextVisibleLeaf = PsiTreeUtil.getNextSiblingOfType(functionName, ClVector.class);
 			if (null == nextVisibleLeaf) return;
-			if ("let".equals(functionName.getText()) && nextVisibleLeaf instanceof ClVector && PsiTreeUtil.isAncestor(
-					nextVisibleLeaf,
-					symbol,
-					true)) annotationHolder.highlight(symbol, colorScheme.getVariable());
+			if ("let".equals(functionName.getText()) && PsiTreeUtil.isAncestor(nextVisibleLeaf, symbol, true))
+				annotationHolder.highlight(symbol, colorScheme.getVariable());
 		}
 	}
 
@@ -74,6 +72,7 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	public @Nullable
 	TextAttributes attributesOf(IElementType iElementType, ColorScheme<? extends TextAttributes> colorScheme) {
 		if (iElementType == ClojureTokenTypes.COMMA) return colorScheme.getComma();
+		else if (iElementType == ClojureTokenTypes.CHAR_LITERAL) return colorScheme.getCharLiteral();
 		else if (iElementType == ClojureTokenTypes.BAD_CHARACTER) return colorScheme.getUnknown();
 		else if (NUMBERS.contains(iElementType)) return colorScheme.getNumbers();
 		else if (ClojureTokenTypes.STRINGS.contains(iElementType)) return colorScheme.getString();
