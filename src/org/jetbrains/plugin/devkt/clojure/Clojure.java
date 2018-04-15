@@ -15,6 +15,9 @@ import org.jetbrains.plugin.devkt.clojure.psi.api.ClList;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClVector;
 import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes.*;
 
 /**
@@ -30,6 +33,48 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			RATIO);
 
 	private static final TokenSet OPERATORS = TokenSet.create(SHARP, UP, SHARPUP, TILDA, AT, TILDAAT, QUOTE, BACKQUOTE);
+	private static final List<Object> typeMetaAliases = Arrays.asList("int",
+			"ints",
+			"long",
+			"longs",
+			"float",
+			"floats",
+			"double",
+			"doubles",
+			"void",
+			"short",
+			"shorts",
+			"boolean",
+			"booleans",
+			"byte",
+			"bytes",
+			"char",
+			"chars",
+			"objects");
+	private static final List<Object> reserved = Arrays.asList("def",
+			"if",
+			"do",
+			"quote",
+			"var",
+			"recur",
+			"throw",
+			"try",
+			"catch",
+			"finally",
+			"monitor-enter",
+			"monitor-exit",
+			"new",
+			"set!",
+			"fn*",
+			"let*",
+			"loop*",
+			"letfn*",
+			"case*",
+			"import*",
+			"reify*",
+			"deftype*",
+			"in-ns",
+			"load-file");
 
 	public Clojure() {
 		super(ClojureLanguage.getInstance(), new ClojureParserDefinition());
@@ -43,7 +88,8 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 
 	@Override
 	public boolean satisfies(String fileName) {
-		return fileName.endsWith(".clj") || fileName.endsWith(".cljs") || fileName.endsWith(".cljc");
+		return fileName.endsWith(".clj") || fileName.endsWith(".cljs") || fileName.endsWith(".cljc") || fileName.equals(
+				"built.boot");
 	}
 
 	@Override
@@ -57,8 +103,10 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	}
 
 	private void symbol(ClSymbol symbol, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
-		if ("let".equals(symbol.getText())) {
+		if (reserved.contains(symbol.getText())) {
 			annotationHolder.highlight(symbol, colorScheme.getKeywords());
+		} else if (typeMetaAliases.contains(symbol.getText())) {
+			annotationHolder.highlight(symbol, colorScheme.getUserTypeRef());
 		} else if (symbol.getParent() instanceof ClVector) {
 			ClList parent = PsiTreeUtil.getParentOfType(symbol, ClList.class);
 			if (null == parent) return;
