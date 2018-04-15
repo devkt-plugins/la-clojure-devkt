@@ -9,12 +9,13 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet;
 import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes;
 import org.jetbrains.plugin.devkt.clojure.parser.ClojureParserDefinition;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClKeyword;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClList;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClVector;
 import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
+
+import static org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes.*;
 
 /**
  * DevKt implementation for la-clojure
@@ -22,11 +23,13 @@ import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
  * @author ice1000
  */
 public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttributes> {
-	private static final TokenSet NUMBERS = TokenSet.create(ClojureTokenTypes.LONG_LITERAL,
-			ClojureTokenTypes.BIG_INT_LITERAL,
-			ClojureTokenTypes.DOUBLE_LITERAL,
-			ClojureTokenTypes.BIG_DECIMAL_LITERAL,
-			ClojureTokenTypes.RATIO);
+	private static final TokenSet NUMBERS = TokenSet.create(LONG_LITERAL,
+			BIG_INT_LITERAL,
+			DOUBLE_LITERAL,
+			BIG_DECIMAL_LITERAL,
+			RATIO);
+
+	private static final TokenSet OPERATORS = TokenSet.create(SHARP, UP, SHARPUP, TILDA, AT, TILDAAT, QUOTE, BACKQUOTE);
 
 	public Clojure() {
 		super(ClojureLanguage.getInstance(), new ClojureParserDefinition());
@@ -71,13 +74,22 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	@Override
 	public @Nullable
 	TextAttributes attributesOf(IElementType iElementType, ColorScheme<? extends TextAttributes> colorScheme) {
-		if (iElementType == ClojureTokenTypes.COMMA) return colorScheme.getComma();
-		else if (iElementType == ClojureTokenTypes.CHAR_LITERAL) return colorScheme.getCharLiteral();
-		else if (iElementType == ClojureTokenTypes.BAD_CHARACTER) return colorScheme.getUnknown();
+		if (iElementType == COMMA) return colorScheme.getComma();
+		else if (iElementType == CHAR_LITERAL) return colorScheme.getCharLiteral();
+		else if (iElementType == LINE_COMMENT) return colorScheme.getLineComments();
+		else if (iElementType == BAD_CHARACTER) return colorScheme.getUnknown();
+		else if (iElementType == WRONG_STRING_LITERAL) return colorScheme.getUnknown();
+		else if (iElementType == COLON_SYMBOL) return colorScheme.getMetaData();
+		else if (iElementType == LEFT_PAREN) return colorScheme.getParentheses();
+		else if (iElementType == RIGHT_PAREN) return colorScheme.getParentheses();
+		else if (iElementType == LEFT_SQUARE) return colorScheme.getBrackets();
+		else if (iElementType == RIGHT_SQUARE) return colorScheme.getBrackets();
+		else if (iElementType == LEFT_CURLY) return colorScheme.getBraces();
+		else if (iElementType == RIGHT_CURLY) return colorScheme.getBraces();
 		else if (NUMBERS.contains(iElementType)) return colorScheme.getNumbers();
-		else if (ClojureTokenTypes.STRINGS.contains(iElementType)) return colorScheme.getString();
-		else if (ClojureTokenTypes.COMMENTS.contains(iElementType)) return colorScheme.getLineComments();
-		else if (ClojureTokenTypes.KEYWORDS.contains(iElementType)) return colorScheme.getKeywords();
+		else if (OPERATORS.contains(iElementType)) return colorScheme.getOperators();
+		else if (STRINGS.contains(iElementType)) return colorScheme.getString();
+		else if (KEYWORDS.contains(iElementType)) return colorScheme.getKeywords();
 		return null;
 	}
 }
