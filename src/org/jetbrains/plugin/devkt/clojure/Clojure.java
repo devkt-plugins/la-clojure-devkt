@@ -3,7 +3,6 @@ package org.jetbrains.plugin.devkt.clojure;
 import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
-import org.ice1000.devkt.openapi.ui.IconLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
@@ -69,6 +68,9 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			"chars",
 			"objects");
 	private static final List<Object> reserved = Arrays.asList("def",
+			"defn",
+			"defmethod",
+			"defn-",
 			"if",
 			"do",
 			"quote",
