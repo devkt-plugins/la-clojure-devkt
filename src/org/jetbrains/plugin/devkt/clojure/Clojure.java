@@ -3,6 +3,7 @@ package org.jetbrains.plugin.devkt.clojure;
 import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
+import org.ice1000.devkt.openapi.ui.IconLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
@@ -15,6 +16,7 @@ import org.jetbrains.plugin.devkt.clojure.psi.api.ClList;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClVector;
 import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +28,12 @@ import static org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes.*;
  * @author ice1000
  */
 public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttributes> {
+	@NotNull
+	@Override
+	public Icon getIcon() {
+		return ClojureIcons.CLOJURE_ICON_16x16;
+	}
+
 	private static final TokenSet NUMBERS = TokenSet.create(LONG_LITERAL,
 			BIG_INT_LITERAL,
 			DOUBLE_LITERAL,

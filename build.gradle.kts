@@ -1,6 +1,6 @@
 import java.io.*
 
-val kotlinVersion = "1.2.31"
+val kotlinVersion = "1.2.40"
 
 group = "org.jetbrains.plugin.devkt.clojure"
 version = "v1.0"
