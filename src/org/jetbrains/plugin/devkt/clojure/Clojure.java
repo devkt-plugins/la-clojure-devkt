@@ -44,8 +44,8 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			RATIO);
 
 	private static final TokenSet OPERATORS = TokenSet.create(SHARP, UP, SHARPUP, TILDA, AT, TILDAAT, QUOTE, BACKQUOTE);
-	private static final List<Object> cljsPredefined = Arrays.asList("Infinity", "-Infinity");
-	private static final List<Object> cljsTypes = Arrays.asList("default",
+	private static final List<String> cljsPredefined = Arrays.asList("Infinity", "-Infinity");
+	private static final List<String> cljsTypes = Arrays.asList("default",
 			"nil",
 			"object",
 			"boolean",
@@ -53,7 +53,7 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			"string",
 			"array",
 			"function");
-	private static final List<Object> typeMetaAliases = Arrays.asList("int",
+	private static final List<String> typeMetaAliases = Arrays.asList("int",
 			"ints",
 			"long",
 			"longs",
@@ -71,7 +71,7 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			"char",
 			"chars",
 			"objects");
-	private static final List<Object> reserved = Arrays.asList("def",
+	private static final List<String> reserved = Arrays.asList("def",
 			"defn",
 			"defmethod",
 			"defn-",
