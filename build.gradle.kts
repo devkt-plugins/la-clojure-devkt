@@ -3,7 +3,7 @@ import java.io.*
 val kotlinVersion = "1.2.40"
 
 group = "org.jetbrains.plugin.devkt.clojure"
-version = "v1.1-SNAPSHOT"
+version = "v1.1"
 
 plugins { java }
 
@@ -32,6 +32,8 @@ repositories {
 
 dependencies {
   compileOnly(kotlin("compiler-embeddable", kotlinVersion))
-  compileOnly(files(*File("lib").listFiles()))
+	val version = "efb0f52d89"
+	compileOnly(group = "com.github.ice1000.dev-kt", name = "common", version = version)
+	runtime(group = "com.github.ice1000.dev-kt", name = "swing", version = version)
 }
 

@@ -1,8 +1,10 @@
 package org.jetbrains.plugin.devkt.clojure;
 
+import kotlin.collections.CollectionsKt;
 import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
+import org.ice1000.devkt.openapi.util.CompletionElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
@@ -17,7 +19,9 @@ import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.jetbrains.plugin.devkt.clojure.lexer.ClojureTokenTypes.*;
 
@@ -108,24 +112,34 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 			"dotimes",
 			"with-local-vars");
 
+	private Set<CompletionElement> predefinedCompletions = new HashSet<>();
+
 	public Clojure() {
 		super(ClojureLanguage.getInstance(), new ClojureParserDefinition());
+		predefinedCompletions.addAll(CollectionsKt.map(reserved, CompletionElement::new));
+		predefinedCompletions.addAll(CollectionsKt.map(typeMetaAliases, CompletionElement::new));
+		predefinedCompletions.addAll(CollectionsKt.map(cljsPredefined, CompletionElement::new));
+		predefinedCompletions.addAll(CollectionsKt.map(cljsTypes, CompletionElement::new));
 	}
 
 	@Override
-	public @NotNull
-	String getLineCommentStart() {
+	public @NotNull Set<CompletionElement> getInitialCompletionElementList() {
+		return predefinedCompletions;
+	}
+
+	@Override
+	public @NotNull String getLineCommentStart() {
 		return ";";
 	}
 
 	@Override
-	public boolean satisfies(String fileName) {
+	public boolean satisfies(@NotNull String fileName) {
 		return fileName.endsWith(".clj") || fileName.endsWith(".cljs") || fileName.endsWith(".cljc") || fileName.equals(
 				"built.boot");
 	}
 
 	@Override
-	public void annotate(PsiElement psiElement, AnnotationHolder<? super TextAttributes> annotationHolder, ColorScheme<? extends TextAttributes> colorScheme) {
+	public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder<? super TextAttributes> annotationHolder, @NotNull ColorScheme<? extends TextAttributes> colorScheme) {
 		if (psiElement instanceof ClSymbol) symbol((ClSymbol) psiElement, annotationHolder, colorScheme);
 		else if (psiElement instanceof ClKeyword) keyword(((ClKeyword) psiElement), annotationHolder, colorScheme);
 	}
@@ -155,8 +169,7 @@ public class Clojure<TextAttributes> extends ExtendedDevKtLanguage<TextAttribute
 	}
 
 	@Override
-	public @Nullable
-	TextAttributes attributesOf(IElementType iElementType, ColorScheme<? extends TextAttributes> colorScheme) {
+	public @Nullable TextAttributes attributesOf(@NotNull IElementType iElementType, @NotNull ColorScheme<? extends TextAttributes> colorScheme) {
 		if (iElementType == COMMA) return colorScheme.getComma();
 		else if (iElementType == CHAR_LITERAL) return colorScheme.getCharLiteral();
 		else if (iElementType == LINE_COMMENT) return colorScheme.getLineComments();
