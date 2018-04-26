@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
   compileOnly(kotlin("compiler-embeddable", kotlinVersion))
-	val version = "efb0f52d89"
+	val version = "fffe21c45d"
 	compileOnly(group = "com.github.ice1000.dev-kt", name = "common", version = version)
 	runtime(group = "com.github.ice1000.dev-kt", name = "swing", version = version)
 }
