@@ -1,9 +1,6 @@
-sudo: required
 language: java
 language: kotlin
 jdk:
 - oraclejdk8
 script:
-- ./gradlew jar --info --warning-mode=all
-before_install:
-- chmod a+x gradlew
+- bash gradlew jar --info --warning-mode=all
