@@ -1,6 +1,6 @@
 import java.io.*
 
-val kotlinVersion = "1.2.41"
+val kotlinVersion = "1.2.70"
 
 group = "org.jetbrains.plugin.devkt.clojure"
 version = "v1.1"
@@ -39,7 +39,7 @@ application {
 
 dependencies {
 	compileOnly(kotlin("compiler-embeddable", kotlinVersion))
-	val version = "v1.4.1"
+	val version = "v1.5-alpha"
 	compileOnly(group = "com.github.ice1000.dev-kt", name = "common", version = version)
 	runtime(group = "com.github.ice1000.dev-kt", name = "swing", version = version)
 }
