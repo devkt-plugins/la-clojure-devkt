@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.*
 
 val kotlinVersion = "1.2.70"
@@ -9,10 +8,6 @@ version = "v1.1"
 plugins {
 	java
 	application
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions { freeCompilerArgs = listOf("-Xjvm-default=enable") }
 }
 
 java {
