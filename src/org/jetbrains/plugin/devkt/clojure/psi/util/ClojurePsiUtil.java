@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.PsiErrorElement;
 import org.jetbrains.kotlin.com.intellij.psi.PsiFile;
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace;
-import org.jetbrains.kotlin.com.intellij.util.containers.HashSet;
 import org.jetbrains.plugin.devkt.clojure.psi.ClojurePsiElement;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClList;
 import org.jetbrains.plugin.devkt.clojure.psi.api.ClojureFile;
@@ -31,7 +30,6 @@ import org.jetbrains.plugin.devkt.clojure.psi.api.symbols.ClSymbol;
 import org.jetbrains.plugin.devkt.clojure.psi.impl.ClKeywordImpl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -41,12 +39,6 @@ import java.util.Set;
 public class ClojurePsiUtil {
 	public static final String JAVA_LANG = "java.lang";
 	public static final String CLOJURE_LANG = "clojure.lang";
-
-	public static final Set<String> DEFINITION_FROM_NAMES = new HashSet<>();
-
-	static {
-		DEFINITION_FROM_NAMES.addAll(Collections.singletonList("fn"));
-	}
 
 	public static @Nullable
 	ClList findFormByName(ClojurePsiElement container, @NotNull String name) {
